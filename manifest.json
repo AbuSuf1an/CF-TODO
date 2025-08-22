@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Codeforces Favorite Problems",
+  "version": "1.0",
+  "description": "Add Codeforces problems to your favorites and view them in your profile.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://codeforces.com/problemset/problem/*/*",
+    "https://codeforces.com/profile/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://codeforces.com/problemset/problem/*/*"],
+      "js": ["contentScriptProblem.js"],
+      "css": ["modal.css"]
+    },
+    {
+      "matches": ["https://codeforces.com/profile/*"],
+      "js": ["contentScriptProfile.js"],
+      "css": ["modal.css"]
+    }
+  ]
+}

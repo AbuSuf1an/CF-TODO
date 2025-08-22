@@ -1,0 +1,56 @@
+/* Modal overlay */
+.cf-fav-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cf-fav-modal {
+  background: #fff;
+  border-radius: 10px;
+  padding: 24px 32px;
+  min-width: 320px;
+  max-width: 400px;
+  max-height: 70vh;
+  overflow-y: auto;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+  position: relative;
+}
+.cf-fav-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 22px;
+  cursor: pointer;
+  color: #888;
+}
+.cf-fav-list {
+  margin-top: 18px;
+}
+.cf-fav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #eee;
+}
+.cf-fav-item a {
+  color: #1a73e8;
+  text-decoration: none;
+  font-weight: 500;
+}
+.cf-fav-item a:hover {
+  text-decoration: underline;
+}
+.cf-fav-remove {
+  background: none;
+  border: none;
+  color: #d00;
+  font-size: 18px;
+  cursor: pointer;
+  margin-left: 10px;
+}
