@@ -9,7 +9,7 @@
       modal.innerHTML = `
         <div class="cf-fav-modal">
           <span class="cf-fav-close" title="Close">&times;</span>
-          <h2>TODO</h2>
+          <h2>TODO (Problems to solve)</h2>
           <div class="cf-fav-list"></div>
         </div>
       `;
@@ -23,7 +23,7 @@
       ? '<p>No problem added yet</p>'
       : favorites.map((p, i) => `
           <div class="cf-fav-item">
-            <button class="cf-todo-done" data-index="${i}" title="Mark as done" style="background:none;border:none;cursor:pointer;padding:0;margin-right:8px;">
+            <button class="cf-todo-done" data-index="${i}" title="${p.done ? 'Solved' : 'Mark as solved'}" style="background:none;border:none;cursor:pointer;padding:0;margin-right:8px;">
               <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <rect x="3" y="3" width="18" height="18" rx="4" fill="${p.done ? '#c6f7d0' : '#eee'}" stroke="${p.done ? '#34a853' : '#bbb'}" stroke-width="2"/>
                 ${p.done ? '<polyline points="7,13 11,17 17,7" fill="none" stroke="#34a853" stroke-width="2.5"/>' : ''}

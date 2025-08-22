@@ -18,14 +18,16 @@
     const titleDiv = document.querySelector('div.problem-statement > div.header > div.title');
     if (!titleDiv || document.getElementById('cf-fav-btn')) return;
   const btn = document.createElement('button');
-  btn.id = 'cf-fav-btn';
-  btn.style.marginLeft = '5px';
-  btn.style.cursor = 'pointer';
-        btn.style.background = 'transparent';
-  btn.style.border = 'none';
-  btn.style.padding = '0';
-  btn.style.verticalAlign = 'middle';
-  btn.style.marginTop = '-10px';
+    btn.id = 'cf-fav-btn';
+    btn.style.marginLeft = '5px';
+    btn.style.cursor = 'pointer';
+    btn.style.background = 'transparent';
+    btn.style.border = 'none';
+    btn.style.padding = '0';
+    btn.style.verticalAlign = 'middle';
+    btn.style.marginTop = '-10px';
+    // Set initial tooltip
+    btn.title = 'Add to Todo';
         // Checkbox with plus icon SVG
         btn.innerHTML = `<svg id="cf-todo-checkbox" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" style="vertical-align: middle;">
           <rect x="3" y="3" width="18" height="18" rx="4" fill="#eee" stroke="#bbb" stroke-width="2"/>
@@ -56,15 +58,18 @@
             favorites[i].done = true;
             chrome.storage.sync.set({favorites}, function() {
               setCheckboxActive(true);
+          btn.title = 'Remove from Todo';
             });
             return;
           }
           setCheckboxActive(isSolved || favorites[i].done);
+        btn.title = 'Remove from Todo';
           return;
         }
       }
       // If not in favorites, do not auto-add even if solved
       setCheckboxActive(false);
+      btn.title = 'Add to Todo';
     });
         function setCheckboxActive(active) {
           const svg = btn.querySelector('#cf-todo-checkbox');
@@ -107,12 +112,14 @@
           favorites.push({name, url, done});
           chrome.storage.sync.set({favorites}, function() {
             setCheckboxActive(true);
+              btn.title = 'Remove from Todo';
           });
         } else {
           // Remove from favorites if already added
           const newFavs = favorites.filter(p => p.url !== url);
           chrome.storage.sync.set({favorites: newFavs}, function() {
             setCheckboxActive(false);
+              btn.title = 'Add to Todo';
           });
         }
       });
