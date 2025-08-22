@@ -1,6 +1,20 @@
 // Injects "⭐ Add to Favorites" button after problem title and saves to chrome.storage.sync
 (function() {
   function injectButton() {
+    // Detect if problem is solved (Accepted in Last submission)
+    let isSolved = false;
+    const lastSubmission = document.querySelector('.roundbox .status-accepted, .roundbox:has(.status-accepted), .problem-statement .status-accepted');
+    if (!lastSubmission) {
+      // Fallback: look for 'Accepted' text in Last submission section
+      const roundboxes = document.querySelectorAll('.roundbox');
+      roundboxes.forEach(box => {
+        if (box.textContent.includes('Accepted')) {
+          isSolved = true;
+        }
+      });
+    } else {
+      isSolved = true;
+    }
     const titleDiv = document.querySelector('div.problem-statement > div.header > div.title');
     if (!titleDiv || document.getElementById('cf-fav-btn')) return;
   const btn = document.createElement('button');
@@ -29,13 +43,29 @@
   titleDiv.parentNode.insertBefore(wrapper, titleDiv);
   wrapper.appendChild(titleDiv);
   wrapper.appendChild(btn);
-    // Check if already favorite
+    // Check if already favorite and/or solved
     const url = window.location.href;
-        chrome.storage.sync.get({favorites: []}, function(data) {
-          if (data.favorites.some(p => p.url === url)) {
-            setCheckboxActive(true);
+    chrome.storage.sync.get({favorites: []}, function(data) {
+      let found = false;
+      let favorites = data.favorites;
+      for (let i = 0; i < favorites.length; i++) {
+        if (favorites[i].url === url) {
+          found = true;
+          // If solved, mark as done
+          if (isSolved && !favorites[i].done) {
+            favorites[i].done = true;
+            chrome.storage.sync.set({favorites}, function() {
+              setCheckboxActive(true);
+            });
+            return;
           }
-        });
+          setCheckboxActive(isSolved || favorites[i].done);
+          return;
+        }
+      }
+      // If not in favorites, do not auto-add even if solved
+      setCheckboxActive(false);
+    });
         function setCheckboxActive(active) {
           const svg = btn.querySelector('#cf-todo-checkbox');
           const box = svg ? svg.querySelector('rect') : null;
@@ -59,7 +89,22 @@
       chrome.storage.sync.get({favorites: []}, function(data) {
         const favorites = data.favorites;
         if (!favorites.some(p => p.url === url)) {
-          favorites.push({name, url});
+          // If solved, mark as done immediately
+          let done = false;
+          let isSolved = false;
+          const lastSubmission = document.querySelector('.roundbox .status-accepted, .roundbox:has(.status-accepted), .problem-statement .status-accepted');
+          if (!lastSubmission) {
+            const roundboxes = document.querySelectorAll('.roundbox');
+            roundboxes.forEach(box => {
+              if (box.textContent.includes('Accepted')) {
+                isSolved = true;
+              }
+            });
+          } else {
+            isSolved = true;
+          }
+          done = isSolved;
+          favorites.push({name, url, done});
           chrome.storage.sync.set({favorites}, function() {
             setCheckboxActive(true);
           });
