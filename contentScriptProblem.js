@@ -3,16 +3,23 @@
   function injectButton() {
     const titleDiv = document.querySelector('div.problem-statement > div.header > div.title');
     if (!titleDiv || document.getElementById('cf-fav-btn')) return;
-    const btn = document.createElement('button');
-    btn.id = 'cf-fav-btn';
+  const btn = document.createElement('button');
+  btn.id = 'cf-fav-btn';
   btn.style.marginLeft = '5px';
   btn.style.cursor = 'pointer';
-  btn.style.background = 'none';
+        btn.style.background = 'transparent';
   btn.style.border = 'none';
   btn.style.padding = '0';
   btn.style.verticalAlign = 'middle';
   btn.style.marginTop = '-10px';
-  btn.innerHTML = `<svg id="cf-fav-star" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" style="filter: drop-shadow(0 1px 2px #888); vertical-align: middle;"><path d="M12 2.5c.4 0 .8.2 1 .6l2.4 5.1 5.6.8c.9.1 1.2 1.2.6 1.8l-4 3.9 1 5.5c.2.9-.8 1.6-1.6 1.2L12 18.3l-5 2.6c-.8.4-1.8-.3-1.6-1.2l1-5.5-4-3.9c-.6-.6-.3-1.7.6-1.8l5.6-.8L11 3.1c.2-.4.6-.6 1-.6z" fill="#bbb" stroke="#888" stroke-width="1"/></svg>`;
+        // Checkbox with plus icon SVG
+        btn.innerHTML = `<svg id="cf-todo-checkbox" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" style="vertical-align: middle;">
+          <rect x="3" y="3" width="18" height="18" rx="4" fill="#eee" stroke="#bbb" stroke-width="2"/>
+          <g id="cf-plus">
+            <line x1="12" y1="8" x2="12" y2="16" stroke="#bbb" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="8" y1="12" x2="16" y2="12" stroke="#bbb" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+        </svg>`;
 
   const wrapper = document.createElement('span');
   wrapper.style.display = 'inline-flex';
@@ -24,24 +31,28 @@
   wrapper.appendChild(btn);
     // Check if already favorite
     const url = window.location.href;
-    chrome.storage.sync.get({favorites: []}, function(data) {
-      if (data.favorites.some(p => p.url === url)) {
-        setStarActive(true);
-      }
-    });
-    function setStarActive(active) {
-      const starSvg = btn.querySelector('#cf-fav-star');
-      const starPath = starSvg ? starSvg.querySelector('path') : null;
-      if (starPath) {
-        if (active) {
-          starPath.setAttribute('fill', '#FFD700');
-          starPath.setAttribute('stroke', '#c9a400');
-        } else {
-          starPath.setAttribute('fill', '#bbb');
-          starPath.setAttribute('stroke', '#888');
+        chrome.storage.sync.get({favorites: []}, function(data) {
+          if (data.favorites.some(p => p.url === url)) {
+            setCheckboxActive(true);
+          }
+        });
+        function setCheckboxActive(active) {
+          const svg = btn.querySelector('#cf-todo-checkbox');
+          const box = svg ? svg.querySelector('rect') : null;
+          const plusGroup = svg ? svg.querySelector('#cf-plus') : null;
+          const plusLines = plusGroup ? plusGroup.querySelectorAll('line') : [];
+          if (box && plusLines.length === 2) {
+            if (active) {
+              box.setAttribute('fill', '#ffe066');
+              box.setAttribute('stroke', '#b8860b');
+              plusLines.forEach(l => l.setAttribute('stroke', '#b8860b'));
+            } else {
+              box.setAttribute('fill', '#eee');
+              box.setAttribute('stroke', '#bbb');
+              plusLines.forEach(l => l.setAttribute('stroke', '#bbb'));
+            }
+          }
         }
-      }
-    }
     btn.addEventListener('click', function() {
       const name = titleDiv.textContent.trim();
       const url = window.location.href;
@@ -50,13 +61,13 @@
         if (!favorites.some(p => p.url === url)) {
           favorites.push({name, url});
           chrome.storage.sync.set({favorites}, function() {
-            setStarActive(true);
+            setCheckboxActive(true);
           });
         } else {
           // Remove from favorites if already added
           const newFavs = favorites.filter(p => p.url !== url);
           chrome.storage.sync.set({favorites: newFavs}, function() {
-            setStarActive(false);
+            setCheckboxActive(false);
           });
         }
       });
