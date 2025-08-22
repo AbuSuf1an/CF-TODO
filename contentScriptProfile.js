@@ -9,7 +9,7 @@
       modal.innerHTML = `
         <div class="cf-fav-modal">
           <span class="cf-fav-close" title="Close">&times;</span>
-          <h2>Todo Problems</h2>
+          <h2>TODO</h2>
           <div class="cf-fav-list"></div>
         </div>
       `;
@@ -20,7 +20,7 @@
     // Update only the list content
     const listDiv = modal.querySelector('.cf-fav-list');
     listDiv.innerHTML = favorites.length === 0
-      ? '<p>No todo problems yet</p>'
+      ? '<p>No problem added yet</p>'
       : favorites.map((p, i) => `
           <div class="cf-fav-item">
             <button class="cf-todo-done" data-index="${i}" title="Mark as done" style="background:none;border:none;cursor:pointer;padding:0;margin-right:8px;">
@@ -93,7 +93,7 @@
     const a = document.createElement('a');
     a.href = '#';
     a.id = 'todo-problems-tab';
-    a.textContent = 'Todo Problems';
+    a.textContent = 'Todo';
     li.appendChild(a);
     menuList.appendChild(li);
     a.onclick = function(e) {
@@ -103,4 +103,9 @@
   }
   document.addEventListener('DOMContentLoaded', injectTab);
   setTimeout(injectTab, 1000);
+
+  const observer = new MutationObserver(() => {
+    injectTab();
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
 })();
