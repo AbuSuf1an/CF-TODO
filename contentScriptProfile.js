@@ -1,28 +1,28 @@
-// Adds Favorite Problems tab and modal to profile page
+// Adds todo list tab and modal to profile page
 (function() {
-  function createModal(favorites) {
-    let modal = document.getElementById('cf-fav-modal');
+  function createModal(todo) {
+    let modal = document.getElementById('cf-todo-modal');
     if (!modal) {
       modal = document.createElement('div');
-      modal.id = 'cf-fav-modal';
-      modal.className = 'cf-fav-modal-overlay';
+      modal.id = 'cf-todo-modal';
+      modal.className = 'cf-todo-modal-overlay';
       modal.innerHTML = `
-        <div class="cf-fav-modal">
-          <span class="cf-fav-close" title="Close">&times;</span>
+        <div class="cf-todo-modal">
+          <span class="cf-todo-close" title="Close">&times;</span>
           <h2>TODO (Problems to solve)</h2>
-          <div class="cf-fav-list"></div>
+          <div class="cf-todo-list"></div>
         </div>
       `;
       document.body.appendChild(modal);
-      modal.querySelector('.cf-fav-close').onclick = () => modal.remove();
+      modal.querySelector('.cf-todo-close').onclick = () => modal.remove();
       modal.onclick = e => { if (e.target === modal) modal.remove(); };
     }
     // Update only the list content
-    const listDiv = modal.querySelector('.cf-fav-list');
-    listDiv.innerHTML = favorites.length === 0
+    const listDiv = modal.querySelector('.cf-todo-list');
+    listDiv.innerHTML = todo.length === 0
       ? '<p>No problem added yet</p>'
-      : favorites.map((p, i) => `
-          <div class="cf-fav-item">
+      : todo.map((p, i) => `
+          <div class="cf-todo-item">
             <button class="cf-todo-done" data-index="${i}" title="${p.done ? 'Solved' : 'Mark as solved'}" style="background:none;border:none;cursor:pointer;padding:0;margin-right:8px;">
               <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <rect x="3" y="3" width="18" height="18" rx="4" fill="${p.done ? '#c6f7d0' : '#eee'}" stroke="${p.done ? '#34a853' : '#bbb'}" stroke-width="2"/>
@@ -42,11 +42,11 @@
     listDiv.querySelectorAll('.cf-todo-done').forEach(btn => {
       btn.onclick = function() {
         const idx = parseInt(this.getAttribute('data-index'));
-        chrome.storage.sync.get({favorites: []}, function(data) {
-          const favs = data.favorites;
-          favs[idx].done = !favs[idx].done;
-          chrome.storage.sync.set({favorites: favs}, function() {
-            createModal(favs);
+        chrome.storage.sync.get({todo: []}, function(data) {
+          const todos = data.todo;
+          todos[idx].done = !todos[idx].done;
+          chrome.storage.sync.set({todo: todos}, function() {
+            createModal(todos);
           });
         });
       };
@@ -54,22 +54,22 @@
     listDiv.querySelectorAll('.cf-todo-delete').forEach(btn => {
       btn.onclick = function() {
         const idx = parseInt(this.getAttribute('data-index'));
-        chrome.storage.sync.get({favorites: []}, function(data) {
-          const favs = data.favorites;
-          favs.splice(idx, 1);
-          chrome.storage.sync.set({favorites: favs}, function() {
-            createModal(favs);
+        chrome.storage.sync.get({todo: []}, function(data) {
+          const todos = data.todo;
+          todos.splice(idx, 1);
+          chrome.storage.sync.set({todo: todos}, function() {
+            createModal(todos);
           });
         });
       };
     });
   }
   function showModal() {
-    chrome.storage.sync.get({favorites: []}, function(data) {
-      const favorites = data.favorites;
+    chrome.storage.sync.get({todo: []}, function(data) {
+      const todo = data.todo;
       // For each problem, check if solved by looking for 'Accepted' in the profile page
       const rows = document.querySelectorAll('table.status-frame-datatable tr');
-      favorites.forEach(p => {
+      todo.forEach(p => {
         let solved = false;
         rows.forEach(row => {
           const link = row.querySelector('a');
@@ -80,8 +80,8 @@
         });
         if (solved) p.done = true;
       });
-      createModal(favorites);
-      chrome.storage.sync.set({favorites});
+      createModal(todo);
+      chrome.storage.sync.set({todo});
     });
   }
   function injectTab() {

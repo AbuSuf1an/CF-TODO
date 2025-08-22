@@ -1,22 +1,22 @@
-// Helper for chrome.storage.sync favorites
+// Helper for chrome.storage.sync todo
 const StorageHelper = {
-  getFavorites(cb) {
-    chrome.storage.sync.get({favorites: []}, data => cb(data.favorites));
+  gettodo(cb) {
+    chrome.storage.sync.get({todo: []}, data => cb(data.todo));
   },
-  addFavorite(problem, cb) {
-    StorageHelper.getFavorites(favs => {
-      if (!favs.some(p => p.url === problem.url)) {
-        favs.push(problem);
-        chrome.storage.sync.set({favorites: favs}, cb);
+  addtodo(problem, cb) {
+    StorageHelper.gettodo(todos => {
+      if (!todos.some(p => p.url === problem.url)) {
+        todos.push(problem);
+        chrome.storage.sync.set({todo: todos}, cb);
       } else {
         cb && cb();
       }
     });
   },
-  removeFavorite(url, cb) {
-    StorageHelper.getFavorites(favs => {
-      const newFavs = favs.filter(p => p.url !== url);
-      chrome.storage.sync.set({favorites: newFavs}, cb);
+  removetodo(url, cb) {
+    StorageHelper.gettodo(todos => {
+      const newtodos = todos.filter(p => p.url !== url);
+      chrome.storage.sync.set({todo: newtodos}, cb);
     });
   }
 };

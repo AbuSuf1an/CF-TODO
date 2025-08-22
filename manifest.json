@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Codeforces Favorite Problems",
+  "name": "Codeforces Todo List",
   "version": "1.0",
-  "description": "Add Codeforces problems to your favorites and view them in your profile.",
+  "description": "Add Codeforces problems to your todo and view them in your profile.",
   "permissions": ["storage", "activeTab", "scripting"],
   "host_permissions": [
     "https://codeforces.com/problemset/problem/*/*",
@@ -19,5 +19,11 @@
       "js": ["contentScriptProfile.js"],
       "css": ["modal.css"]
     }
-  ]
+  ],
+  "icons": {
+    "16": "icons/icon.png",
+    "32": "icons/icon.png",
+    "48": "icons/icon.png",
+    "128": "icons/icon.png"
+  }
 }

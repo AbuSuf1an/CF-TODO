@@ -1,4 +1,4 @@
-// Injects "⭐ Add to Favorites" button after problem title and saves to chrome.storage.sync
+// Injects "⭐ Add to todo" button after problem title and saves to chrome.storage.sync
 (function() {
   function injectButton() {
     // Detect if problem is solved (Accepted in Last submission)
@@ -16,9 +16,9 @@
       isSolved = true;
     }
     const titleDiv = document.querySelector('div.problem-statement > div.header > div.title');
-    if (!titleDiv || document.getElementById('cf-fav-btn')) return;
+    if (!titleDiv || document.getElementById('cf-todo-btn')) return;
   const btn = document.createElement('button');
-    btn.id = 'cf-fav-btn';
+    btn.id = 'cf-todo-btn';
     btn.style.marginLeft = '5px';
     btn.style.cursor = 'pointer';
     btn.style.background = 'transparent';
@@ -45,29 +45,29 @@
   titleDiv.parentNode.insertBefore(wrapper, titleDiv);
   wrapper.appendChild(titleDiv);
   wrapper.appendChild(btn);
-    // Check if already favorite and/or solved
+    // Check if already todo and/or solved
     const url = window.location.href;
-    chrome.storage.sync.get({favorites: []}, function(data) {
+    chrome.storage.sync.get({todo: []}, function(data) {
       let found = false;
-      let favorites = data.favorites;
-      for (let i = 0; i < favorites.length; i++) {
-        if (favorites[i].url === url) {
+      let todo = data.todo;
+      for (let i = 0; i < todo.length; i++) {
+        if (todo[i].url === url) {
           found = true;
           // If solved, mark as done
-          if (isSolved && !favorites[i].done) {
-            favorites[i].done = true;
-            chrome.storage.sync.set({favorites}, function() {
+          if (isSolved && !todo[i].done) {
+            todo[i].done = true;
+            chrome.storage.sync.set({todo}, function() {
               setCheckboxActive(true);
           btn.title = 'Remove from Todo';
             });
             return;
           }
-          setCheckboxActive(isSolved || favorites[i].done);
+          setCheckboxActive(isSolved || todo[i].done);
         btn.title = 'Remove from Todo';
           return;
         }
       }
-      // If not in favorites, do not auto-add even if solved
+      // If not in todo, do not auto-add even if solved
       setCheckboxActive(false);
       btn.title = 'Add to Todo';
     });
@@ -91,9 +91,9 @@
     btn.addEventListener('click', function() {
       const name = titleDiv.textContent.trim();
       const url = window.location.href;
-      chrome.storage.sync.get({favorites: []}, function(data) {
-        const favorites = data.favorites;
-        if (!favorites.some(p => p.url === url)) {
+      chrome.storage.sync.get({todo: []}, function(data) {
+        const todo = data.todo;
+        if (!todo.some(p => p.url === url)) {
           // If solved, mark as done immediately
           let done = false;
           let isSolved = false;
@@ -109,15 +109,15 @@
             isSolved = true;
           }
           done = isSolved;
-          favorites.push({name, url, done});
-          chrome.storage.sync.set({favorites}, function() {
+          todo.push({name, url, done});
+          chrome.storage.sync.set({todo}, function() {
             setCheckboxActive(true);
               btn.title = 'Remove from Todo';
           });
         } else {
-          // Remove from favorites if already added
-          const newFavs = favorites.filter(p => p.url !== url);
-          chrome.storage.sync.set({favorites: newFavs}, function() {
+          // Remove from todo if already added
+          const newtodos = todo.filter(p => p.url !== url);
+          chrome.storage.sync.set({todo: newtodos}, function() {
             setCheckboxActive(false);
               btn.title = 'Add to Todo';
           });
