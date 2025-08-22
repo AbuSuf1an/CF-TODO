@@ -30,18 +30,21 @@
 .cf-fav-list {
   margin-top: 18px;
 }
-.cf-fav-item {
+ .cf-fav-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 10px;
   margin-bottom: 10px;
   padding-bottom: 6px;
   border-bottom: 1px solid #eee;
 }
-.cf-fav-item a {
+ .cf-fav-item a {
   color: #1a73e8;
   text-decoration: none;
   font-weight: 500;
+  text-align: left;
+  flex: 1;
 }
 .cf-fav-item a:hover {
   text-decoration: underline;
