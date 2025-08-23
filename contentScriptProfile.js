@@ -14,8 +14,17 @@
         </div>
       `;
       document.body.appendChild(modal);
-      modal.querySelector('.cf-todo-close').onclick = () => modal.remove();
-      modal.onclick = e => { if (e.target === modal) modal.remove(); };
+      modal.querySelector('.cf-todo-close').onclick = () => {
+        modal.remove();
+        document.body.style.overflow = '';
+      };
+      modal.onclick = e => {
+        if (e.target === modal) {
+          modal.remove();
+          document.body.style.overflow = '';
+        }
+      };
+      document.body.style.overflow = 'hidden';
     }
     // Update only the list content
     const listDiv = modal.querySelector('.cf-todo-list');
@@ -29,7 +38,7 @@
                 ${p.done ? '<polyline points="7,13 11,17 17,7" fill="none" stroke="#34a853" stroke-width="2.5"/>' : ''}
               </svg>
             </button>
-            <a href="${p.url}" target="_blank">${p.name}</a>
+            <span class="cf-todo-name"><a href="${p.url}" target="_blank">${p.name}</a></span>
             <button class="cf-todo-delete" data-index="${i}" title="Delete" style="background:none;border:none;cursor:pointer;padding:0;margin-left:8px;">
               <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <line x1="6" y1="6" x2="18" y2="18" stroke="#888" stroke-width="2.5" stroke-linecap="round"/>

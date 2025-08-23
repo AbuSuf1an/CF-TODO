@@ -58,12 +58,13 @@
             todo[i].done = true;
             chrome.storage.sync.set({todo}, function() {
               setCheckboxActive(true);
-          btn.title = 'Remove from Todo';
+              btn.title = 'Remove from Todo';
             });
             return;
           }
-          setCheckboxActive(isSolved || todo[i].done);
-        btn.title = 'Remove from Todo';
+          // Always show golden if in todo, regardless of solved/done status
+          setCheckboxActive(true);
+          btn.title = 'Remove from Todo';
           return;
         }
       }
