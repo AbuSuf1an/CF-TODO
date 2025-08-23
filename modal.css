@@ -1,3 +1,43 @@
+.act-item {
+  position: static !important;
+  bottom: 0 !important;
+  display: inline-flex;
+  align-items: center;
+}
+/* Ensure act dark cell is wide enough and icons are aligned horizontally */
+td.act.dark {
+  min-width: 90px;
+  width: 90px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.act-item:not(:has(.cf-todo-btn)) {
+  transform: translateY(2px);
+}
+.cf-todo-act-icons {
+  display: inline-block;
+  vertical-align: middle;
+  height: 22px;
+}
+.cf-todo-act-icons > span {
+  display: inline-block;
+  vertical-align: middle;
+  height: 22px;
+}
+.cf-todo-btn {
+  display: inline-block;
+  vertical-align: middle;
+  height: 22px;
+}
+.cf-todo-btn-span {
+  margin-left: 6px;
+  display: inline-flex;
+  align-items: center;
+}
+.cf-todo-btn {
+  display: inline-block;
+  vertical-align: middle;
+}
 /* Modal overlay */
 .cf-todo-modal-overlay {
   position: fixed;

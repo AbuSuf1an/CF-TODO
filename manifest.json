@@ -15,6 +15,14 @@
       "css": ["modal.css"]
     },
     {
+      "matches": [
+        "https://codeforces.com/problemset",
+        "https://codeforces.com/problemset/page/*"
+      ],
+      "js": ["contentScriptProblemset.js"],
+      "css": ["modal.css"]
+    },
+    {
       "matches": ["https://codeforces.com/profile/*"],
       "js": ["contentScriptProfile.js"],
       "css": ["modal.css"]
