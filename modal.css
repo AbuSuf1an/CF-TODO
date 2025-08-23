@@ -32,14 +32,18 @@
 .cf-todo-list {
   margin-top: 18px;
 }
- .cf-todo-item {
+.cf-todo-item {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 10px;
   margin-bottom: 10px;
   padding-bottom: 6px;
   border-bottom: 1px solid #eee;
+}
+.cf-todo-name {
+  flex: 1;
+  text-align: left;
 }
  .cf-todo-item a {
   color: #1a73e8;
